@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Restaurant You Like{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="name">Restaurant Name</label>
+    <input name="name" id="name" type="text" required>
+
+    <label for="address">Address</label>
+    <input name="address" id="address" type="text"required>
+    <input type="submit" value="Submit">
+  </form>
+{% endblock %}
