@@ -1,6 +1,6 @@
 # You're Better Than This
 
-App to improve your taste. 
+App to improve your taste.
 
 High level, user exp:
 1) User fills out webform with a restaurant they like, and a location.
@@ -34,7 +34,7 @@ Extension Later:
 - could save those categories, use the bigger table design (restaurnt + category tables, bridge)
 - cache the initial APi response in its own cache db, when confirmed, dump that into storage db
 
-Next steps: 
+Next steps:
 - user login (user db too)
 - "Search restaurnt form"
 - Yelp adapter and parser
@@ -48,6 +48,7 @@ Next steps:
 python3 -m venv venv    # creates folder “venv” for virtual env
 . venv/bin/activate     # hop into env
 pip install Flask       #install flask in venv
+flask init-db
 ```
 
 2) Running the Flask App
@@ -57,4 +58,3 @@ export FLASK_APP=better_than_this
 export FLASK_ENV=development
 flask run
 ```
-
