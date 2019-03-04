@@ -42,17 +42,8 @@ Next steps:
 
 -----
 
-1) Installing, Starting the Virtual Environment
-
-```bash
-python3 -m venv venv    # creates folder “venv” for virtual env
-. venv/bin/activate     # hop into env
-pip install Flask       #install flask in venv
-flask init-db
-```
-
-1a) Update: 
-As is good practice, venv has been left out of the git repo. However, requires a manual virtualenv generation and installation of Flask when loading repo. Not great. Instead, from a working install, I used `pip freeze > requirements.txt` to print packages used. That requirements.txt *is* saved in our git repo.
+1) Installing, Starting the Virtual Environment: 
+As is good practice, venv has been left out of the git repo. However, this requires a manual virtualenv generation and installation of Flask when loading repo. Not great. Instead, from a working install, I used `pip freeze > requirements.txt` to print packages used. That requirements.txt *is* saved in our git repo.
 
 So, install requirements from pip freeze'd env:
 
