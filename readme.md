@@ -36,8 +36,8 @@ Extension Later:
 
 Next steps:
 - user login (user db too)
-- "Search restaurnt form"
-- Yelp adapter and parser
+- "Search restaurnt form" [Complete]
+- Yelp adapter and parser [http_funcs.py created, now needs response parser]
 
 
 -----
