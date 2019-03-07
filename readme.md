@@ -45,13 +45,19 @@ Next steps:
 1) Installing, Starting the Virtual Environment
 
 ```bash
+cp .envrc{.sample,}
 python3 -m venv venv    # creates folder “venv” for virtual env
 . venv/bin/activate     # hop into env
 pip install Flask       #install flask in venv
 flask init-db
 ```
 
-2) Running the Flask App
+2) Load up your environment variables. You can do this with either:
+
+- Install [direnv](https://direnv.net/) and that will take care of it for you!
+- running `source .envrc` for every terminal
+
+3) Running the Flask App
 
 ```bash
 export FLASK_APP=better_than_this
