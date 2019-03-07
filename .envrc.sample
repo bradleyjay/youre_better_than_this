@@ -1,0 +1,4 @@
+export FLASK_APP=better_than_this
+export FLASK_ENV=development
+
+export YELP_API_KEY=get-api-key-from-yelp
