@@ -58,3 +58,10 @@ What the app does:
 Extension Later:
 - could save those categories, use the bigger table design (restaurnt + category tables, bridge)
 - cache the initial APi response in its own cache db, when confirmed, dump that into storage db
+
+
+Next steps:
+- user login (user db too)
+- "Search restaurnt form" [Complete]
+- Yelp adapter and parser [http_funcs.py created, now needs response parser]
+
