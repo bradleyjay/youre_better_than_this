@@ -10,7 +10,7 @@ def get_restaurant(name, address):
     # HTTPConnection.request(method, url, body=None, headers={}, *, encode_chunked=False)
     # parser wil have to build params into our URL
 
-    headers = {'Authorization': 'Bearer Xpm2AcpB8R4txc5cow8Npl6NtrblvrzuPWkvlOWoypVWiU4AI7lrdydCOZv95xVKnNfNesdlVD2_wKoaRPNmsYxpL01CJJfxJbXnR802CuYGxYZU5gKTfXTr_mV8XHYx'}
+    headers = {'Authorization': 'Bearer API_KEY'}
     conn.request('GET', '/v3/businesses/search?term=Faro&location=NYC', headers=headers) #URL must start with / (?)
 
     r1 = conn.getresponse()
