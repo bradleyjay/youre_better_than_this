@@ -1,5 +1,30 @@
 # You're Better Than This
 
+## Setup
+
+1) Installing, Starting the Virtual Environment
+
+```bash
+cp .envrc{.sample,}
+python3 -m venv venv    # creates folder “venv” for virtual env
+. venv/bin/activate     # hop into env
+pip install Flask       #install flask in venv
+flask init-db
+```
+
+2) Load up your environment variables. You can do this with either:
+
+- Install [direnv](https://direnv.net/) and that will take care of it for you!
+- running `source .envrc` for every terminal
+
+3) Running the Flask App
+
+```bash
+flask run
+```
+
+## About
+
 App to improve your taste.
 
 High level, user exp:
@@ -33,28 +58,3 @@ What the app does:
 Extension Later:
 - could save those categories, use the bigger table design (restaurnt + category tables, bridge)
 - cache the initial APi response in its own cache db, when confirmed, dump that into storage db
-
-Next steps:
-- user login (user db too)
-- "Search restaurnt form"
-- Yelp adapter and parser
-
-
------
-
-1) Installing, Starting the Virtual Environment
-
-```bash
-python3 -m venv venv    # creates folder “venv” for virtual env
-. venv/bin/activate     # hop into env
-pip install Flask       #install flask in venv
-flask init-db
-```
-
-2) Running the Flask App
-
-```bash
-export FLASK_APP=better_than_this
-export FLASK_ENV=development
-flask run
-```
