@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Restaurant You Like{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+
+<!-- lets show the restaurnt info, and image here
+- name
+- address
+- image
+
+format:
+"name": candidate["name"]
+"location": parse_location(candidate["location"])
+"image_url": candidate["image_url"]
+
+
+ -->
+
+<h2> Was this the place you like? </h2>
+
+<img src={{search_result["image_url"]}} />
+<strong> {{search_result["name"]}} </strong>
+<p> {{search_result["address"]}} </p>
+
+
+ <!--  <form action='    ' method="post">
+    <label for="name">Restaurant Name</label>
+    <input name="name" id="name" type="text" required>
+
+    <label for="address">Address</label>
+    <input name="address" id="address" type="text"required>
+    <input type="submit" value="Submit">
+  </form> -->
+{% endblock %}

@@ -9,10 +9,23 @@ import os
 
 def get_restaurant(name, address):
     restaurants = businesses_search(name, address)
+    
     if restaurants:
-        return restaurants['businesses'][0]
-    else:
-        return 'things have gone badly'
+        candidate = restaurants['businesses'][0]
+    
+        if all (k in candidate for k in ("name", "location")): 
+            print("got it.")
+            return {
+            "name": candidate["name"],
+            "address": parse_location(candidate["location"]),
+            "image_url": candidate["image_url"]
+            }
+
+    return "ERROR - bad API response"
+
+def parse_location(location):
+    return location["address1"] + " \n " + location["city"] + ", " + location["zip_code"]
+
 
 def businesses_search(name, address):
     conn = http.client.HTTPSConnection("api.yelp.com")
