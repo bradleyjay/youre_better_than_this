@@ -8,7 +8,7 @@
 cp .envrc{.sample,}
 python3 -m venv venv    # creates folder “venv” for virtual env
 . venv/bin/activate     # hop into env
-pip install Flask       #install flask in venv
+pip install -r requirements.txt
 flask init-db
 ```
 
@@ -64,4 +64,3 @@ Next steps:
 - user login (user db too)
 - "Search restaurnt form" [Complete]
 - Yelp adapter and parser [http_funcs.py created, now needs response parser]
-
