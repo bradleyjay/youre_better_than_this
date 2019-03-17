@@ -23,6 +23,11 @@ flask init-db
 flask run
 ```
 
+4) Running tests
+
+- Ensure the app is installed through pip with `pip install -e .`
+- `pytest`
+
 ## About
 
 App to improve your taste.
