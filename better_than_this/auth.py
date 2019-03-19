@@ -57,7 +57,7 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user['id']
-            return redirect(url_for('locations.new'))
+            return redirect(url_for('location.new'))
 
         flash(error)
 
