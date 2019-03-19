@@ -7,10 +7,10 @@ from better_than_this.auth import login_required
 from better_than_this.db import get_db
 from better_than_this.external.yelp_client import get_restaurant   #handles api call and resp
 
-bp = Blueprint('location', __name__)
+bp = Blueprint('location', __name__, url_prefix='/locations')
 
-@bp.route('/', methods=('GET', 'POST'))
-def index():
+@bp.route('/verify', methods=('GET', 'POST'))
+def verify():
     if request.method == 'POST':
         # unpack the name, address fields
         # using the "name" field from templates/locations/index.html
@@ -24,5 +24,12 @@ def index():
         # send this data to Yelp API
         search_result = get_restaurant(name, address)
         print(search_result)
+        return render_template('location/verify.html', search_result=search_result)
 
-    return render_template('location/index.html')
+    
+
+@bp.route('/new', methods=('GET', 'POST'))
+def new():
+    
+
+    return render_template('location/new.html') # rename template for new
