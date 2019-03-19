@@ -28,8 +28,21 @@ def verify():
 
     
 
-@bp.route('/new', methods=('GET', 'POST'))
+@bp.route('/new')
 def new():
     
 
     return render_template('location/new.html') # rename template for new
+
+@bp.route('', methods=['POST'])
+def index():
+    # if request.method == 'POST':
+
+
+
+    flash("Success!")
+
+    # second api call goes here for more detail
+
+    return redirect(url_for('location.new'))
+     # rename template for new
