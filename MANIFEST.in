@@ -1,0 +1,4 @@
+include better_than_this/schema.sql
+graft better_than_this/static
+graft better_than_this/templates
+global-exclude *.pyc
