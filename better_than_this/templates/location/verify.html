@@ -27,12 +27,12 @@ format:
 <p> {{search_result["address"]}} </p>
 
 
- <!--  <form action='    ' method="post">
-    <label for="name">Restaurant Name</label>
-    <input name="name" id="name" type="text" required>
+<form action='/locations' method="post">
+   <input type="submit" value="Yes">
 
-    <label for="address">Address</label>
-    <input name="address" id="address" type="text"required>
-    <input type="submit" value="Submit">
-  </form> -->
+</form>
+
+<a href='/locations/new'> 
+  <button> No! </button>
+</a>
 {% endblock %}
