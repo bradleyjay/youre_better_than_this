@@ -38,7 +38,7 @@ def new():
 @bp.route('', methods=['POST'])
 def index():
     if request.method == 'POST':
-
+        search_result = request.form['name']
 
 
         flash("Success!")
