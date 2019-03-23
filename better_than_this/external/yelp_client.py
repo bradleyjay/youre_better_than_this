@@ -22,6 +22,8 @@ def get_restaurant(name, address):
             "address": parse_location(candidate["location"]),
             "image_url": candidate["image_url"],
             "id": candidate["id"],
+            "categories": candidate["categories"], # needs parsing fcn, API call will need comma seperated list
+            "price": candidate["price"], #may need to be converted: $ -> 1, $$ -> 2, etc with fcn
             "request_duration": request_duration
             }
 
