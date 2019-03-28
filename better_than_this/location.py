@@ -38,15 +38,15 @@ def new():
 @bp.route('', methods=['POST'])
 def index():
     if request.method == 'POST':
-        search_result = request.form['name']
+        # search_result = request.form['name']
 
 
-        flash("Success!")
-
+        # flash("Success!")
+        flash(request.form['tester1'])
         # second api call goes here for more detail
 
-        better_restaurants = businesses_search_suggestions(search_result)
-        print(better_restaurants)
+        # better_restaurants = businesses_search_suggestions(search_result)
+        # print(better_restaurants)
 
     return redirect(url_for('location.new'))
      # rename template for new
