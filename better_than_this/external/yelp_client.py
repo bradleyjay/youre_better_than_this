@@ -13,18 +13,7 @@ def get_restaurant(name, address):
 
     if restaurants:
         candidate = restaurants['businesses'][0]
-
-        if all (k in candidate for k in ("name", "location")):
-            print("got it.")
-            return {
-            "name": candidate["name"],
-            "address": parse_location(candidate["location"]),
-            "image_url": candidate["image_url"],
-            "id": candidate["id"],
-            "categories": candidate["categories"],
-            "price": candidate["price"],
-            "request_duration": request_duration
-            }
+        return location_from_api(candidate, request_duration)
 
     return "ERROR - bad API response"
 
@@ -38,7 +27,7 @@ def businesses_search(name, address):
 
 def businesses_search_suggestions(search_result):
     query_params = {
-        "location": search_result["address"],
+        "location": search_result['address'],
         "radius": 800,
         "limit": 5,
         "sort_by": "rating",
@@ -89,3 +78,15 @@ def get_dollar_count(price):
 def get_categories(categories):
     mapped_categories = map(lambda category: category["alias"], categories)
     return ",".join(list(mapped_categories))
+
+def location_from_api(businesses_data, request_duration):
+    if all (k in businesses_data for k in ("name", "location")):
+        return {
+            "name": businesses_data["name"],
+            "address": parse_location(businesses_data["location"]),
+            "image_url": businesses_data["image_url"],
+            "id": businesses_data["id"],
+            "categories": businesses_data["categories"],
+            "price": businesses_data["price"],
+            "request_duration": request_duration
+        }
