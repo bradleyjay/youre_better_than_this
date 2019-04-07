@@ -6,19 +6,25 @@ import http.client
 import urllib
 import json
 import os
+import time
 
 def get_restaurant(name, address):
-    restaurants = businesses_search(name, address)
-    
+    restaurants, request_duration = businesses_search(name, address) # remember, "return x, y" yields a tuple, which you unpack like so ^
+
     if restaurants:
         candidate = restaurants['businesses'][0]
     
+        print(candidate)
         if all (k in candidate for k in ("name", "location")): 
             print("got it.")
             return {
             "name": candidate["name"],
             "address": parse_location(candidate["location"]),
-            "image_url": candidate["image_url"]
+            "image_url": candidate["image_url"],
+            "id": candidate["id"],
+            "categories": candidate["categories"], # needs parsing fcn, API call will need comma seperated list
+            "price": candidate["price"], #may need to be converted: $ -> 1, $$ -> 2, etc with fcn
+            "request_duration": request_duration
             }
 
     return "ERROR - bad API response"
@@ -30,9 +36,12 @@ def parse_location(location):
 def businesses_search(name, address):
     conn = http.client.HTTPSConnection("api.yelp.com")
 
-
     headers = {'Authorization': 'Bearer ' + os.environ['YELP_API_KEY']}
+
+    # get request duration - wrap http call in clock times
+    request_start = time.clock()
     conn.request('GET', generate_url(name, address), headers=headers)
+    request_duration = time.clock() - request_start
 
     response = conn.getresponse()
 
@@ -40,7 +49,27 @@ def businesses_search(name, address):
     # dig out just the name of the restaurant and it's street address, maybe
     # something else identifying too?
     if response.status == 200:
-        return decode_body_response(response)
+        return decode_body_response(response), request_duration
+    else:
+        return false
+
+def businesses_search_suggestions(search_result):
+    conn = http.client.HTTPSConnection("api.yelp.com")
+
+    headers = {'Authorization': 'Bearer ' + os.environ['YELP_API_KEY']}
+
+    # get request duration - wrap http call in clock times
+    request_start = time.clock()
+    conn.request('GET', generate_better_url(search_result), headers=headers)
+    request_duration = time.clock() - request_start
+
+    response = conn.getresponse()
+
+    # .read() gives us the HTTP body response back - we'll need to parse this,
+    # dig out just the name of the restaurant and it's street address, maybe
+    # something else identifying too?
+    if response.status == 200:
+        return decode_body_response(response), request_duration
     else:
         return false
 
@@ -52,4 +81,18 @@ def decode_body_response(response):
 
 def generate_url(name, address):
     query_params = {'term' : name, 'location' : address}
+    return '/v3/businesses/search?' + urllib.parse.urlencode(query_params)
+
+def generate_better_url(search_result):
+
+    query_params = {
+    "location": "NYC" #hardcoded for now
+    # "radius": 800,
+    # "open_now": True,
+    # "limit": 5,
+    # "sort_by": "rating",
+    # "price" : search_result["price"],
+    # "categories" : search_result["categories"]
+
+    }
     return '/v3/businesses/search?' + urllib.parse.urlencode(query_params)
