@@ -14,7 +14,6 @@ def get_restaurant(name, address):
     if restaurants:
         candidate = restaurants['businesses'][0]
 
-        print(candidate)
         if all (k in candidate for k in ("name", "location")):
             print("got it.")
             return {
@@ -22,8 +21,8 @@ def get_restaurant(name, address):
             "address": parse_location(candidate["location"]),
             "image_url": candidate["image_url"],
             "id": candidate["id"],
-            "categories": candidate["categories"], # needs parsing fcn, API call will need comma seperated list
-            "price": candidate["price"], #may need to be converted: $ -> 1, $$ -> 2, etc with fcn
+            "categories": candidate["categories"],
+            "price": candidate["price"],
             "request_duration": request_duration
             }
 
@@ -38,18 +37,15 @@ def businesses_search(name, address):
     return make_request(url)
 
 def businesses_search_suggestions(search_result):
-    # TODO: Unpack location, price, and cat from search_result
     query_params = {
-    "location": search_result["address"],
-    "radius": 800,
-    # "open_now": True,
-    "limit": 5,
-    "sort_by": "rating",
-    "price" : get_dollar_count(search_result["price"]),
-    # "categories" : search_result["categories"]
+        "location": search_result["address"],
+        "radius": 800,
+        "limit": 5,
+        "sort_by": "rating",
+        "price" : get_dollar_count(search_result["price"]),
+        "categories" : get_categories(search_result["categories"])
     }
-    print(query_params)
-    url = generate_url(query_params) # hardcoding for now
+    url = generate_url(query_params)
     return make_request(url)
 
 def make_request(url):
@@ -89,3 +85,7 @@ def get_dollar_count(price):
         price_range = str(dollar_count-1) + ", " + str(dollar_count) + ", " + str(dollar_count + 1)
 
     return price_range
+
+def get_categories(categories):
+    mapped_categories = map(lambda category: category["alias"], categories)
+    return ",".join(list(mapped_categories))
