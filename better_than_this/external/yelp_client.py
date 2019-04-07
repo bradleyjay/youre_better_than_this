@@ -19,15 +19,10 @@ def get_restaurant(name, address):
 
 def get_better_restaurants(search_result):
     results, request_duration = businesses_search_suggestions(search_result)
-    # print(" **** THIS IS RESTAURANTS ***** \n" + str(restaurants))
     if results:
         return list(map(location_from_api, results["businesses"]))
 
     return "ERROR - bad API response"
-
-
-
-
 
 def parse_location(location):
     return location["address1"] + " \n " + location["city"] + ", " + location["zip_code"]
