@@ -20,10 +20,6 @@ def verify():
         name = request.form['name']
         address = request.form['address']
 
-       # test via PRINT
-        print(name)
-        print(address)
-
         # send this data to Yelp API
         search_result = get_restaurant(name, address)
         print(search_result)
@@ -33,8 +29,6 @@ def verify():
 
 @bp.route('/new')
 def new():
-
-
     return render_template('location/new.html') # rename template for new
 
 @bp.route('', methods=['POST'])
