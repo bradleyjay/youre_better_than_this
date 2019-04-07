@@ -39,16 +39,17 @@ def businesses_search(name, address):
 
 def businesses_search_suggestions(search_result):
     # TODO: Unpack location, price, and cat from search_result
-    # query_params = {
-    # "location": search_result["some_key"],
-    # "radius": 800,
+    query_params = {
+    "location": search_result["address"],
+    "radius": 800,
     # "open_now": True,
-    # "limit": 5,
-    # "sort_by": "rating",
-    # "price" : search_result["price"],
+    "limit": 5,
+    "sort_by": "rating",
+    "price" : get_dollar_count(search_result["price"]),
     # "categories" : search_result["categories"]
-
-    url = generate_url({"location": "NYC"}) # hardcoding for now
+    }
+    print(query_params)
+    url = generate_url(query_params) # hardcoding for now
     return make_request(url)
 
 def make_request(url):
@@ -66,7 +67,7 @@ def make_request(url):
     if response.status == 200:
         return decode_body_response(response), request_duration
     else:
-        return false
+        return False
 
 def decode_body_response(response):
     byte_body = response.read()
@@ -76,3 +77,15 @@ def decode_body_response(response):
 
 def generate_url(query_params):
     return '/v3/businesses/search?' + urllib.parse.urlencode(query_params)
+
+def get_dollar_count(price):
+    dollar_count = len(price)
+
+    if dollar_count==4:
+        price_range = "3, 4"
+    elif dollar_count==1:
+        price_range = "1, 2"
+    else:
+        price_range = str(dollar_count-1) + ", " + str(dollar_count) + ", " + str(dollar_count + 1)
+
+    return price_range
