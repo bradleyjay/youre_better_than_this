@@ -7,7 +7,7 @@ import ast
 from better_than_this.auth import login_required
 from better_than_this.db import get_db
 from better_than_this.external.yelp_client import (
-    businesses_search_suggestions, decode_body_response, get_restaurant
+    get_better_restaurants, get_restaurant
 )
 
 bp = Blueprint('location', __name__, url_prefix='/locations')
@@ -45,8 +45,10 @@ def index():
         # https://stackoverflow.com/questions/988228/convert-a-string-representation-of-a-dictionary-to-a-dictionary
         search_result = ast.literal_eval(search_result)
 
-        better_restaurants = businesses_search_suggestions(search_result)
+        better_restaurants = get_better_restaurants(search_result)
+
         flash(better_restaurants)
+        return render_template('location/better_options.html', better_restaurants=better_restaurants)
 
     return redirect(url_for('location.new'))
      # rename template for new

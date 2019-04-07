@@ -17,6 +17,18 @@ def get_restaurant(name, address):
 
     return "ERROR - bad API response"
 
+def get_better_restaurants(search_result):
+    results, request_duration = businesses_search_suggestions(search_result)
+    # print(" **** THIS IS RESTAURANTS ***** \n" + str(restaurants))
+    if results:
+        return list(map(location_from_api, results["businesses"]))
+
+    return "ERROR - bad API response"
+
+
+
+
+
 def parse_location(location):
     return location["address1"] + " \n " + location["city"] + ", " + location["zip_code"]
 
@@ -79,7 +91,9 @@ def get_categories(categories):
     mapped_categories = map(lambda category: category["alias"], categories)
     return ",".join(list(mapped_categories))
 
-def location_from_api(businesses_data, request_duration):
+def location_from_api(businesses_data, request_duration=0):
+    print("This is Business Data \n:" + str(businesses_data))
+
     if all (k in businesses_data for k in ("name", "location")):
         return {
             "name": businesses_data["name"],
@@ -90,3 +104,5 @@ def location_from_api(businesses_data, request_duration):
             "price": businesses_data["price"],
             "request_duration": request_duration
         }
+    else:
+        return "Missing keys"
