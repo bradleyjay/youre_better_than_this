@@ -13,9 +13,9 @@ def get_restaurant(name, address):
 
     if restaurants:
         candidate = restaurants['businesses'][0]
-    
+
         print(candidate)
-        if all (k in candidate for k in ("name", "location")): 
+        if all (k in candidate for k in ("name", "location")):
             print("got it.")
             return {
             "name": candidate["name"],
@@ -34,40 +34,35 @@ def parse_location(location):
 
 
 def businesses_search(name, address):
-    conn = http.client.HTTPSConnection("api.yelp.com")
-
-    headers = {'Authorization': 'Bearer ' + os.environ['YELP_API_KEY']}
-
-    # get request duration - wrap http call in clock times
-    request_start = time.clock()
-    conn.request('GET', generate_url(name, address), headers=headers)
-    request_duration = time.clock() - request_start
-
-    response = conn.getresponse()
-
-    # .read() gives us the HTTP body response back - we'll need to parse this,
-    # dig out just the name of the restaurant and it's street address, maybe
-    # something else identifying too?
-    if response.status == 200:
-        return decode_body_response(response), request_duration
-    else:
-        return false
+    url = generate_url({"term": name, "location": address})
+    return make_request(url)
 
 def businesses_search_suggestions(search_result):
+    # TODO: Unpack location, price, and cat from search_result
+    # query_params = {
+    # "location": search_result["some_key"],
+    # "radius": 800,
+    # "open_now": True,
+    # "limit": 5,
+    # "sort_by": "rating",
+    # "price" : search_result["price"],
+    # "categories" : search_result["categories"]
+
+    url = generate_url({"location": "NYC"}) # hardcoding for now
+    return make_request(url)
+
+def make_request(url):
     conn = http.client.HTTPSConnection("api.yelp.com")
 
     headers = {'Authorization': 'Bearer ' + os.environ['YELP_API_KEY']}
 
     # get request duration - wrap http call in clock times
     request_start = time.clock()
-    conn.request('GET', generate_better_url(search_result), headers=headers)
+    conn.request('GET', url, headers=headers)
     request_duration = time.clock() - request_start
 
     response = conn.getresponse()
 
-    # .read() gives us the HTTP body response back - we'll need to parse this,
-    # dig out just the name of the restaurant and it's street address, maybe
-    # something else identifying too?
     if response.status == 200:
         return decode_body_response(response), request_duration
     else:
@@ -79,20 +74,5 @@ def decode_body_response(response):
     json_body = json.loads(string_body)
     return json_body
 
-def generate_url(name, address):
-    query_params = {'term' : name, 'location' : address}
-    return '/v3/businesses/search?' + urllib.parse.urlencode(query_params)
-
-def generate_better_url(search_result):
-
-    query_params = {
-    "location": "NYC" #hardcoded for now
-    # "radius": 800,
-    # "open_now": True,
-    # "limit": 5,
-    # "sort_by": "rating",
-    # "price" : search_result["price"],
-    # "categories" : search_result["categories"]
-
-    }
+def generate_url(query_params):
     return '/v3/businesses/search?' + urllib.parse.urlencode(query_params)
