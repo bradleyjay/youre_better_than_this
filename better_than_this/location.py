@@ -2,11 +2,13 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
 from werkzeug.exceptions import abort
+import ast
 
 from better_than_this.auth import login_required
 from better_than_this.db import get_db
-from better_than_this.external.yelp_client import get_restaurant
-from better_than_this.external.yelp_client import businesses_search_suggestions   #handles api call and resp
+from better_than_this.external.yelp_client import (
+    get_better_restaurants, get_restaurant
+)
 
 bp = Blueprint('location', __name__, url_prefix='/locations')
 
@@ -27,26 +29,26 @@ def verify():
         print(search_result)
         return render_template('location/verify.html', search_result=search_result)
 
-    
+
 
 @bp.route('/new')
 def new():
-    
+
 
     return render_template('location/new.html') # rename template for new
 
 @bp.route('', methods=['POST'])
 def index():
     if request.method == 'POST':
-        # search_result = request.form['name']
+        search_result = request.form['search_result']
+        # Need to use ast.literal_eval because it seems this info coming back from the front end isn't technically json? Using this instead of json.load in the API
+        # https://stackoverflow.com/questions/988228/convert-a-string-representation-of-a-dictionary-to-a-dictionary
+        search_result = ast.literal_eval(search_result)
 
+        better_restaurants = get_better_restaurants(search_result)
 
-        # flash("Success!")
-        flash(request.form['tester1'])
-        # second api call goes here for more detail
-
-        # better_restaurants = businesses_search_suggestions(search_result)
-        # print(better_restaurants)
+        flash(better_restaurants)
+        return render_template('location/better_options.html', better_restaurants=better_restaurants)
 
     return redirect(url_for('location.new'))
      # rename template for new

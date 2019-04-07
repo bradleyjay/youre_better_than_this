@@ -13,19 +13,14 @@ def get_restaurant(name, address):
 
     if restaurants:
         candidate = restaurants['businesses'][0]
+        return location_from_api(candidate, request_duration)
 
-        print(candidate)
-        if all (k in candidate for k in ("name", "location")):
-            print("got it.")
-            return {
-            "name": candidate["name"],
-            "address": parse_location(candidate["location"]),
-            "image_url": candidate["image_url"],
-            "id": candidate["id"],
-            "categories": candidate["categories"], # needs parsing fcn, API call will need comma seperated list
-            "price": candidate["price"], #may need to be converted: $ -> 1, $$ -> 2, etc with fcn
-            "request_duration": request_duration
-            }
+    return "ERROR - bad API response"
+
+def get_better_restaurants(search_result):
+    results, request_duration = businesses_search_suggestions(search_result)
+    if results:
+        return list(map(location_from_api, results["businesses"]))
 
     return "ERROR - bad API response"
 
@@ -38,17 +33,15 @@ def businesses_search(name, address):
     return make_request(url)
 
 def businesses_search_suggestions(search_result):
-    # TODO: Unpack location, price, and cat from search_result
-    # query_params = {
-    # "location": search_result["some_key"],
-    # "radius": 800,
-    # "open_now": True,
-    # "limit": 5,
-    # "sort_by": "rating",
-    # "price" : search_result["price"],
-    # "categories" : search_result["categories"]
-
-    url = generate_url({"location": "NYC"}) # hardcoding for now
+    query_params = {
+        "location": search_result['address'],
+        "radius": 800,
+        "limit": 5,
+        "sort_by": "rating",
+        "price" : get_dollar_count(search_result["price"]),
+        "categories" : get_categories(search_result["categories"])
+    }
+    url = generate_url(query_params)
     return make_request(url)
 
 def make_request(url):
@@ -66,7 +59,7 @@ def make_request(url):
     if response.status == 200:
         return decode_body_response(response), request_duration
     else:
-        return false
+        return False
 
 def decode_body_response(response):
     byte_body = response.read()
@@ -76,3 +69,35 @@ def decode_body_response(response):
 
 def generate_url(query_params):
     return '/v3/businesses/search?' + urllib.parse.urlencode(query_params)
+
+def get_dollar_count(price):
+    dollar_count = len(price)
+
+    if dollar_count==4:
+        price_range = "3, 4"
+    elif dollar_count==1:
+        price_range = "1, 2"
+    else:
+        price_range = str(dollar_count-1) + ", " + str(dollar_count) + ", " + str(dollar_count + 1)
+
+    return price_range
+
+def get_categories(categories):
+    mapped_categories = map(lambda category: category["alias"], categories)
+    return ",".join(list(mapped_categories))
+
+def location_from_api(businesses_data, request_duration=0):
+    print("This is Business Data \n:" + str(businesses_data))
+
+    if all (k in businesses_data for k in ("name", "location")):
+        return {
+            "name": businesses_data["name"],
+            "address": parse_location(businesses_data["location"]),
+            "image_url": businesses_data["image_url"],
+            "id": businesses_data["id"],
+            "categories": businesses_data["categories"],
+            "price": businesses_data["price"],
+            "request_duration": request_duration
+        }
+    else:
+        return "Missing keys"
