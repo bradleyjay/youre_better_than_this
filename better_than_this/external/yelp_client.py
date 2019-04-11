@@ -24,6 +24,10 @@ def get_better_restaurants(search_result):
 
     return "ERROR - bad API response"
 
+
+## Private Fcns:
+
+
 def parse_location(location):
     return location["address1"] + " \n " + location["city"] + ", " + location["zip_code"]
 
