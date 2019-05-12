@@ -54,9 +54,10 @@ def make_request(url):
     headers = {'Authorization': 'Bearer ' + os.environ['YELP_API_KEY']}
 
     # get request duration - wrap http call in clock times
-    request_start = time.clock()
+    
+    request_start= time.time()
     conn.request('GET', url, headers=headers)
-    request_duration = time.clock() - request_start
+    request_duration = time.time() - request_start
 
     response = conn.getresponse()
 
