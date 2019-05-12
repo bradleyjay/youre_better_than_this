@@ -2,7 +2,7 @@
 Contains functions for grabbing data and parsing it, from the Yelp API
 """
 
-import http.client
+import requests
 import urllib
 import json
 import os
@@ -49,28 +49,16 @@ def businesses_search_suggestions(search_result):
     return make_request(url)
 
 def make_request(url):
-    conn = http.client.HTTPSConnection("api.yelp.com")
-
     headers = {'Authorization': 'Bearer ' + os.environ['YELP_API_KEY']}
 
-    # get request duration - wrap http call in clock times
-    
     request_start= time.time()
-    conn.request('GET', url, headers=headers)
+    response = requests.get("https://api.yelp.com" + url, headers=headers)
     request_duration = time.time() - request_start
 
-    response = conn.getresponse()
-
-    if response.status == 200:
-        return decode_body_response(response), request_duration
+    if response.status_code == 200:
+        return response.json(), request_duration
     else:
-        return False
-
-def decode_body_response(response):
-    byte_body = response.read()
-    string_body = byte_body.decode("utf-8")
-    json_body = json.loads(string_body)
-    return json_body
+        return False, False
 
 def generate_url(query_params):
     return '/v3/businesses/search?' + urllib.parse.urlencode(query_params)
