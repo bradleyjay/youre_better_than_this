@@ -84,12 +84,13 @@ def location_from_api(businesses_data, request_duration=0):
 
     if all (k in businesses_data for k in ("name", "location")):
         return {
+            # NOTE: Almost none of these are required and we could be more flexible about how to handle missing fields
             "name": businesses_data["name"],
             "address": parse_location(businesses_data["location"]),
             "image_url": businesses_data["image_url"],
             "id": businesses_data["id"],
             "categories": businesses_data["categories"],
-            "price": businesses_data["price"],
+            "price": businesses_data.get("price", "unknown"),
             "request_duration": request_duration
         }
     else:

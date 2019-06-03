@@ -21,7 +21,7 @@ def test_get_restaurant(requests_mock):
 
 def test_get_better_restaurants(requests_mock):
 
-    requests_mock.get('http://api.yelp.com/v3/businesses/search?name=faro&term=NYC', text=yelp_response)
+    requests_mock.get('https://api.yelp.com/v3/businesses/search?radius=800&location=123+Fake+Street&categories=italian&price=2%2C+3%2C+4&limit=5&sort_by=rating', json=yelp_response, status_code=200)
 
 
     search_results = {
@@ -33,6 +33,8 @@ def test_get_better_restaurants(requests_mock):
             "price": "$$$"
         }
     response = get_better_restaurants(search_results)
+
+    restaurant_attrs = ['name', 'image_url', 'price', 'categories','address','id', 'request_duration']
 
     for restaurant in response:
         for restaurant_attr in restaurant:
