@@ -2,7 +2,7 @@
 Contains functions for grabbing data and parsing it, from the Yelp API
 """
 
-import http.client
+import requests
 import urllib
 import json
 import os
@@ -23,6 +23,10 @@ def get_better_restaurants(search_result):
         return list(map(location_from_api, results["businesses"]))
 
     return "ERROR - bad API response"
+
+
+## Private Fcns:
+
 
 def parse_location(location):
     return location["address1"] + " \n " + location["city"] + ", " + location["zip_code"]
@@ -45,27 +49,16 @@ def businesses_search_suggestions(search_result):
     return make_request(url)
 
 def make_request(url):
-    conn = http.client.HTTPSConnection("api.yelp.com")
-
     headers = {'Authorization': 'Bearer ' + os.environ['YELP_API_KEY']}
 
-    # get request duration - wrap http call in clock times
-    request_start = time.clock()
-    conn.request('GET', url, headers=headers)
-    request_duration = time.clock() - request_start
+    request_start= time.time()
+    response = requests.get("https://api.yelp.com" + url, headers=headers)
+    request_duration = time.time() - request_start
 
-    response = conn.getresponse()
-
-    if response.status == 200:
-        return decode_body_response(response), request_duration
+    if response.status_code == 200:
+        return response.json(), request_duration
     else:
-        return False
-
-def decode_body_response(response):
-    byte_body = response.read()
-    string_body = byte_body.decode("utf-8")
-    json_body = json.loads(string_body)
-    return json_body
+        return False, False
 
 def generate_url(query_params):
     return '/v3/businesses/search?' + urllib.parse.urlencode(query_params)
@@ -91,12 +84,13 @@ def location_from_api(businesses_data, request_duration=0):
 
     if all (k in businesses_data for k in ("name", "location")):
         return {
+            # NOTE: Almost none of these are required and we could be more flexible about how to handle missing fields
             "name": businesses_data["name"],
             "address": parse_location(businesses_data["location"]),
             "image_url": businesses_data["image_url"],
             "id": businesses_data["id"],
             "categories": businesses_data["categories"],
-            "price": businesses_data["price"],
+            "price": businesses_data.get("price", "unknown"),
             "request_duration": request_duration
         }
     else:
