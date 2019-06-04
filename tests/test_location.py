@@ -20,3 +20,13 @@ def test_verify(client, app, requests_mock):
     )
     assert response.status_code == 200
 
+
+def test_get_index(client, app, requests_mock):
+    response = client.get('/locations')
+
+    assert response.status_code == 302
+
+    assert response.headers['Location'] == 'http://localhost/locations/new'
+
+
+

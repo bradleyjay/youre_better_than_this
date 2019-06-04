@@ -31,7 +31,8 @@ def verify():
 def new():
     return render_template('location/new.html') # rename template for new
 
-@bp.route('', methods=['POST'])
+# @bp.route('', methods=['POST'])
+@bp.route('', methods=('GET', 'POST'))
 def index():
     if request.method == 'POST':
         search_result = request.form['search_result']
