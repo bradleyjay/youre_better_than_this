@@ -28,5 +28,18 @@ def test_get_index(client, app, requests_mock):
 
     assert response.headers['Location'] == 'http://localhost/locations/new'
 
+def test_post_index(client, app, requests_mock):
+    requests_mock.get('https://api.yelp.com/v3/businesses/search?location=7+Carmine+St+%0A+New+York%2C+10014&radius=800&limit=5&sort_by=rating&price=1%2C+2&categories=pizza', json=yelp_response)
+    
+
+    search_result = {'name': "Joe's Pizza", 'address': '7 Carmine St \n New York, 10014', 'image_url': 'https://s3-media2.fl.yelpcdn.com/bphoto/FhbFkrh_3TrAOZvoWTyOJA/o.jpg', 'id': 'uc5qQMzs96rzjK27epDCug', 'categories': [{'alias': 'pizza', 'title': 'Pizza'}], 'price': '$', 'request_duration': 0.5822188854217529}
+    
+
+    response = client.post(
+        '/locations', data={'search_result': str(search_result)}
+    )
+    
+    assert response.status_code == 200
+
 
 

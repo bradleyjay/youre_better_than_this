@@ -38,6 +38,7 @@ def index():
         search_result = request.form['search_result']
         # Need to use ast.literal_eval because it seems this info coming back from the front end isn't technically json? Using this instead of json.load in the API
         # https://stackoverflow.com/questions/988228/convert-a-string-representation-of-a-dictionary-to-a-dictionary
+        
         search_result = ast.literal_eval(search_result)
 
         better_restaurants = get_better_restaurants(search_result)
